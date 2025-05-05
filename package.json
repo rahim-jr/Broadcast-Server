@@ -16,5 +16,8 @@
     "url": "https://github.com/rahim-jr/Broadcast-Server/issues"
   },
   "homepage": "https://github.com/rahim-jr/Broadcast-Server#readme",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "ws": "^8.18.2"
+  }
 }
