@@ -64,11 +64,14 @@ function startServer(port = 3000) {
       ws.on('message', raw => {
         const { type, text } = JSON.parse(raw);
         if (type === 'chat') {
-          // Broadcast as before, tagging fromName
-          for (let { ws: cWs } of clients.values()) {
+          // Broadcast to all clients EXCEPT the sender
+          for (let [id, { ws: cWs }] of clients.entries()) {
+            // Skip if this is the sender's WebSocket
+            if (cWs === ws) continue;
+            
             if (cWs.readyState === WebSocket.OPEN) {
               cWs.send(JSON.stringify({
-                type:'chat',
+                type: 'chat',
                 fromName: name,
                 text
               }));
