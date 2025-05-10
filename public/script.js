@@ -1,31 +1,45 @@
+// Utility function to get DOM elements
+
+function get(selector) {
+  return document.querySelector(selector); 
+}
+
+// Utility function to format date
+function formatDate(date) {
+  const h = "0" + date.getHours();
+  const m = "0" + date.getMinutes();
+  return `${h.slice(-2)}:${m.slice(-2)}`;
+}
+
 const msgerForm = get(".msger-inputarea");
 const msgerInput = get(".msger-input");
 const msgerChat = get(".msger-chat");
 
-const BOT_MSGS = [
-  "Hi, how are you?",
-  "Ohh... I can't understand what you trying to say. Sorry!",
-  "I like to play games... But I don't know how to play!",
-  "Sorry if my answers are not relevant. :))",
-  "I feel sleepy! :("
-];
+const socket = new WebSocket(`ws://${location.host}`);
+let PERSON_NAME = '';
+const PERSON_IMG = 'https://image.flaticon.com/icons/svg/145/145867.svg';
 
-// Icons made by Freepik from www.flaticon.com
-const BOT_IMG = "https://image.flaticon.com/icons/svg/327/327779.svg";
-const PERSON_IMG = "https://image.flaticon.com/icons/svg/145/145867.svg";
-const BOT_NAME = "BOT";
-const PERSON_NAME = "Sajad";
+socket.addEventListener('open', () => {
+  console.log('🟢 Connected');
+});
+
+socket.addEventListener('message', event => {
+  const data = JSON.parse(event.data);
+  if (data.type === 'welcome') {
+    PERSON_NAME = data.name;
+  }
+  else if (data.type === 'chat') {
+    appendMessage(data.fromName, PERSON_IMG, 'left', data.text);
+  }
+});
 
 msgerForm.addEventListener("submit", event => {
   event.preventDefault();
-
-  const msgText = msgerInput.value;
-  if (!msgText) return;
-
-  appendMessage(PERSON_NAME, PERSON_IMG, "right", msgText);
+  const text = msgerInput.value.trim();
+  if (!text) return;
+  appendMessage(PERSON_NAME, PERSON_IMG, "right", text);
+  socket.send(JSON.stringify({ type: 'chat', text }));
   msgerInput.value = "";
-
-  botResponse();
 });
 
 function appendMessage(name, img, side, text) {
@@ -41,33 +55,13 @@ function appendMessage(name, img, side, text) {
       </div>
     </div>
   `;
-
   msgerChat.insertAdjacentHTML("beforeend", msgHTML);
   msgerChat.scrollTop += 500;
 }
 
-function botResponse() {
-  const r = random(0, BOT_MSGS.length - 1);
-  const msgText = BOT_MSGS[r];
-  const delay = msgText.split(" ").length * 100;
-
-  setTimeout(() => {
-    appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
-  }, delay);
+// Utility function to get user name
+function getUserName() {
+  const user = JSON.parse(localStorage.getItem('user'));
+  return user ? user.name : 'Guest';
 }
 
-// Utils
-function get(selector, root = document) {
-  return root.querySelector(selector);
-}
-
-function formatDate(date) {
-  const h = "0" + date.getHours();
-  const m = "0" + date.getMinutes();
-
-  return `${h.slice(-2)}:${m.slice(-2)}`;
-}
-
-function random(min, max) {
-  return Math.floor(Math.random() * (max - min) + min);
-}
