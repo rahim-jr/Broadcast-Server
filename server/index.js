@@ -34,7 +34,7 @@ let availableNames = [...NAMES] ;
 // Tracking clients: id -> {ws, name, icon}
 const clients = new Map() ;
 
-function startServer(port = 3000) {
+function startServer(port = process.env.PORT || 3000) {
   try {
     console.log('Starting server...');
     const app = express() ;
@@ -49,7 +49,7 @@ function startServer(port = 3000) {
 
     // Create WebSocket server
     const wss = new WebSocket.Server({ server });
-    console.log(`📡 WebSocket server initialized on ws://localhost:${port}`);
+    console.log(`📡 WebSocket server initialized on port ${port}`);
 
     wss.on('connection', ws => {
       // Pick a name (or "Guest" if we run out)
@@ -98,8 +98,8 @@ function startServer(port = 3000) {
     });
 
     // Start the server
-    server.listen(port, () => {
-      console.log(`📡 HTTP server running on http://localhost:${port}`);
+    server.listen(port, '0.0.0.0', () => {
+      console.log(`📡 HTTP server running on port ${port}`);
     });
 
     // Error handling

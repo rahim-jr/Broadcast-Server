@@ -15,7 +15,11 @@ const msgerForm = get(".msger-inputarea");
 const msgerInput = get(".msger-input");
 const msgerChat = get(".msger-chat");
 
-const socket = new WebSocket(`ws://${location.host}`);
+// Get the current host and protocol
+const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+const host = window.location.host;
+const socket = new WebSocket(`${protocol}//${host}`);
+
 let PERSON_NAME = '';
 let PERSON_ICON = '';
 
