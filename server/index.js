@@ -25,10 +25,13 @@ const NAMES = [
   'Strider', 'Thunder', 'Ulysses', 'Valkyrie', 'Warlock', 'Excalibur'
 ];
 
+// Default icon for all users
+const DEFAULT_ICON = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0Ij48bWFzayBpZD0ibGluZU1kRW1vamlTbWlsZUZpbGxlZDAiPjxnIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjIiPjxwYXRoIGZpbGw9IiNmZmYiIGZpbGwtb3BhY2l0eT0iMCIgc3Ryb2tlLWRhc2hhcnJheT0iNjQiIHN0cm9rZS1kYXNob2Zmc2V0PSI2NCIgZD0iTTEyIDNjNC45NyAwIDkgNC4wMyA5IDljMCA0Ljk3IC00LjAzIDkgLTkgOWMtNC45NyAwIC05IC00LjAzIC05IC05YzAgLTQuOTcgNC4wMyAtOSA5IC05Ij48YW5pbWF0ZSBmaWxsPSJmcmVlemUiIGF0dHJpYnV0ZU5hbWU9ImZpbGwtb3BhY2l0eSIgYmVnaW49IjAuN3MiIGR1cj0iMC41cyIgdmFsdWVzPSIwOzEiLz48YW5pbWF0ZSBmaWxsPSJmcmVlemUiIGF0dHJpYnV0ZU5hbWU9InN0cm9rZS1kYXNob2Zmc2V0IiBkdXI9IjAuNnMiIHZhbHVlcz0iNjQ7MCIvPjwvcGF0aD48cGF0aCBzdHJva2U9IiMwMDAiIHN0cm9rZS1kYXNoYXJyYXk9IjIiIHN0cm9rZS1kYXNob2Zmc2V0PSIyIiBkPSJNOSA5djEiPjxhbmltYXRlIGZpbGw9ImZyZWV6ZSIgYXR0cmlidXRlTmFtZT0ic3Ryb2tlLWRhc2hvZmZzZXQiIGJlZ2luPSIxLjJzIiBkdXI9IjAuMnMiIHZhbHVlcz0iMjswIi8+PC9wYXRoPjxwYXRoIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLWRhc2hhcnJheT0iMiIgc3Ryb2tlLWRhc2hvZmZzZXQ9IjIiIGQ9Ik0xNSA5djEiPjxhbmltYXRlIGZpbGw9ImZyZWV6ZSIgYXR0cmlidXRlTmFtZT0ic3Ryb2tlLWRhc2hvZmZzZXQiIGJlZ2luPSIxLjRzIiBkdXI9IjAuMnMiIHZhbHVlcz0iMjswIi8+PC9wYXRoPjxwYXRoIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLWRhc2hhcnJheT0iMTIiIHN0cm9rZS1kYXNob2Zmc2V0PSIxMiIgZD0iTTggMTRjMC41IDEuNSAxLjc5IDMgNCAzYzIuMjEgMCAzLjUgLTEuNSA0IC0zIj48YW5pbWF0ZSBmaWxsPSJmcmVlemUiIGF0dHJpYnV0ZU5hbWU9InN0cm9rZS1kYXNob2Zmc2V0IiBiZWdpbj0iMS42cyIgZHVyPSIwLjJzIiB2YWx1ZXM9IjEyOzAiLz48L3BhdGg+PC9nPjwvbWFzaz48cmVjdCB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIGZpbGw9ImN1cnJlbnRDb2xvciIgbWFzaz0idXJsKCNsaW5lTWRFbW9qaVNtaWxlRmlsbGVkMCkiLz48L3N2Zz4=';
+
 // A working copy of available names
 let availableNames = [...NAMES] ;
 
-// Tracking clients: id -> {ws , name}
+// Tracking clients: id -> {ws, name, icon}
 const clients = new Map() ;
 
 function startServer(port = 3000) {
@@ -55,24 +58,30 @@ function startServer(port = 3000) {
         : `Guest-${Math.floor(Math.random()*1000)}`;
 
       const clientId = randomUUID();
-      clients.set(clientId, { ws, name });
+      clients.set(clientId, { ws, name, iconUrl: DEFAULT_ICON });
       console.log(`🟢 ${name} connected`);
 
-      // 4. Send the welcome + assigned name
-      ws.send(JSON.stringify({ type:'welcome', clientId, name }));
+      // Send the welcome + assigned name and icon
+      ws.send(JSON.stringify({ 
+        type: 'welcome', 
+        clientId, 
+        name,
+        iconUrl: DEFAULT_ICON 
+      }));
 
       ws.on('message', raw => {
         const { type, text } = JSON.parse(raw);
         if (type === 'chat') {
           // Broadcast to all clients EXCEPT the sender
-          for (let [id, { ws: cWs }] of clients.entries()) {
+          for (let [id, { ws: cWs, name: fromName, iconUrl }] of clients.entries()) {
             // Skip if this is the sender's WebSocket
             if (cWs === ws) continue;
             
             if (cWs.readyState === WebSocket.OPEN) {
               cWs.send(JSON.stringify({
                 type: 'chat',
-                fromName: name,
+                fromName,
+                iconUrl,
                 text
               }));
             }

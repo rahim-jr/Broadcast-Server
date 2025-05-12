@@ -17,7 +17,7 @@ const msgerChat = get(".msger-chat");
 
 const socket = new WebSocket(`ws://${location.host}`);
 let PERSON_NAME = '';
-const PERSON_IMG = 'https://image.flaticon.com/icons/svg/145/145867.svg';
+let PERSON_ICON = '';
 
 socket.addEventListener('open', () => {
   console.log('🟢 Connected');
@@ -27,9 +27,10 @@ socket.addEventListener('message', event => {
   const data = JSON.parse(event.data);
   if (data.type === 'welcome') {
     PERSON_NAME = data.name;
+    PERSON_ICON = data.iconUrl;
   }
   else if (data.type === 'chat') {
-    appendMessage(data.fromName, PERSON_IMG, 'left', data.text);
+    appendMessage(data.fromName, data.iconUrl, 'left', data.text);
   }
 });
 
@@ -37,7 +38,7 @@ msgerForm.addEventListener("submit", event => {
   event.preventDefault();
   const text = msgerInput.value.trim();
   if (!text) return;
-  appendMessage(PERSON_NAME, PERSON_IMG, "right", text);
+  appendMessage(PERSON_NAME, PERSON_ICON, "right", text);
   socket.send(JSON.stringify({ type: 'chat', text }));
   msgerInput.value = "";
 });
