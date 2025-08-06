@@ -83,21 +83,11 @@ function startServer(port = process.env.PORT || 3000) {
             if (cWs.readyState === WebSocket.OPEN) {
               cWs.send(JSON.stringify({
                 type: 'chat',
-                fromName,
-                iconUrl,
+                fromName: senderInfo.name,
+                iconUrl: senderInfo.iconUrl,
                 text
               }));
             }
-          }
-          
-          // Send back to sender so they can see their own message
-          if (ws.readyState === WebSocket.OPEN) {
-            ws.send(JSON.stringify({
-              type: 'chat',
-              fromName: senderInfo.name,
-              iconUrl: senderInfo.iconUrl,
-              text
-            }));
           }
         }
       });
