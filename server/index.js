@@ -70,10 +70,13 @@ function startServer(port = process.env.PORT || 3000) {
       }));
 
       ws.on('message', raw => {
-        const { type, text } = JSON.parse(raw);
+        const data = JSON.parse(raw);
+        const { type, text, messageId } = data;
+        
         if (type === 'chat') {
           // Get sender's info
           const senderInfo = clients.get(clientId);
+          const msgId = randomUUID();
           
           // Broadcast to all clients EXCEPT the sender
           for (let [id, { ws: cWs, name: fromName, iconUrl }] of clients.entries()) {
@@ -83,8 +86,25 @@ function startServer(port = process.env.PORT || 3000) {
             if (cWs.readyState === WebSocket.OPEN) {
               cWs.send(JSON.stringify({
                 type: 'chat',
+                messageId: msgId,
                 fromName: senderInfo.name,
                 iconUrl: senderInfo.iconUrl,
+                text
+              }));
+            }
+          }
+        }
+        else if (type === 'edit') {
+          // Get sender's info
+          const senderInfo = clients.get(clientId);
+          
+          // Broadcast edit to all clients
+          for (let [id, { ws: cWs }] of clients.entries()) {
+            if (cWs.readyState === WebSocket.OPEN) {
+              cWs.send(JSON.stringify({
+                type: 'edit',
+                messageId,
+                fromName: senderInfo.name,
                 text
               }));
             }
