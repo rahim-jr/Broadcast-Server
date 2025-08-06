@@ -19,14 +19,15 @@ Visit the live application at: [SimpleChat](https://broadcast-server-l55g.onrend
 
 ## 🚀 Features
 
-- Real-time messaging using WebSocket
-- Random user name assignment from a predefined list
-- Clean and modern UI
-- Responsive design
-- Message timestamps
-- User connection/disconnection notifications
-- Automatic message scrolling
-- Cross-platform compatibility
+- **Real-time messaging** using WebSocket
+- **Random user name assignment** from a predefined list of 100+ unique names
+- **Message editing** - users can edit their own messages with ✏️ button
+- **Clean and modern UI** with responsive design
+- **Message timestamps** in HH:MM format
+- **User connection/disconnection notifications**
+- **Automatic message scrolling** to latest messages
+- **Cross-platform compatibility**
+- **Real-time message updates** across all connected users
 
 ## 🛠️ Technologies Used
 
@@ -94,6 +95,14 @@ Visit the live application at: [SimpleChat](https://broadcast-server-l55g.onrend
    http://localhost:3000
    ```
 
+### 🎮 How to Use
+
+1. **Join the chat**: Open the application in your browser
+2. **Get a name**: You'll be assigned a random name automatically
+3. **Send messages**: Type in the input field and press Enter
+4. **Edit messages**: Click the ✏️ button on your own messages to edit
+5. **Real-time updates**: See all changes instantly across all connected users
+
 ## 🔧 Configuration
 
 The server runs on port 3000 by default. You can change this by setting the `PORT` environment variable:
@@ -109,6 +118,8 @@ PORT=4000 npm start
 - Maintains persistent connections for real-time updates
 - Handles connection/disconnection events gracefully
 - Broadcasts messages to all connected clients except sender
+- **Real-time message editing** with instant updates across all users
+- **Unique message IDs** for tracking and editing specific messages
 
 ### User Management
 - Automatically assigns random names from a predefined list of 100+ unique names
@@ -123,6 +134,10 @@ PORT=4000 npm start
 - Displays message timestamps in HH:MM format
 - Auto-scrolls to latest messages
 - Clean message bubbles with different colors for sent/received messages
+- **Message editing functionality** with real-time updates
+- **Edit button (✏️)** appears on user's own messages
+- **Inline editing** with keyboard controls (Enter to save, Escape to cancel)
+- **Real-time synchronization** of edits across all connected users
 
 ## 🤝 Contributing
 
@@ -135,6 +150,21 @@ This project is licensed under the ISC License.
 ## 👨‍💻 Author
 
 - GitHub: [@rahim-jr](https://github.com/rahim-jr)
+
+## 🎯 Key Features Demo
+
+### Message Editing
+- Click the ✏️ button on any of your messages
+- Edit the text inline
+- Press **Enter** to save changes
+- Press **Escape** to cancel editing
+- All users see the update in real-time
+
+### Real-time Communication
+- Send messages and see them appear instantly
+- Messages from others appear on the left
+- Your messages appear on the right
+- All users see the same message updates simultaneously
 
 ## 🙏 Acknowledgments
 
