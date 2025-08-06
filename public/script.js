@@ -64,9 +64,5 @@ function appendMessage(name, img, side, text) {
   msgerChat.scrollTop += 500;
 }
 
-// Utility function to get user name
-function getUserName() {
-  const user = JSON.parse(localStorage.getItem('user'));
-  return user ? user.name : 'Guest';
-}
+
 

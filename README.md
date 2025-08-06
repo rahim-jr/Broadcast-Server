@@ -42,6 +42,10 @@ Visit the live application at: [SimpleChat](https://broadcast-server-l55g.onrend
   - JavaScript (Vanilla)
   - WebSocket API
 
+- **Dependencies:**
+  - express: ^4.21.2
+  - ws: ^8.18.2
+
 ## 🏗️ Project Structure
 
 ```
@@ -52,6 +56,7 @@ Visit the live application at: [SimpleChat](https://broadcast-server-l55g.onrend
 ├── server/
 │   └── index.js
 ├── package.json
+├── package-lock.json
 └── README.md
 ```
 
@@ -102,18 +107,22 @@ PORT=4000 npm start
 ### Real-time Communication
 - Uses WebSocket for instant message delivery
 - Maintains persistent connections for real-time updates
-- Handles connection/disconnection events
+- Handles connection/disconnection events gracefully
+- Broadcasts messages to all connected clients except sender
 
 ### User Management
-- Automatically assigns random names from a predefined list
-- Tracks online users
-- Manages user sessions
+- Automatically assigns random names from a predefined list of 100+ unique names
+- Tracks online users and manages connections
+- Recycles names when users disconnect
+- Provides fallback "Guest" names if all predefined names are used
+- Each user gets a unique animated avatar icon
 
 ### Message Handling
-- Supports text messages
-- Includes sender information
-- Displays message timestamps
+- Supports text messages with real-time delivery
+- Includes sender information and timestamps
+- Displays message timestamps in HH:MM format
 - Auto-scrolls to latest messages
+- Clean message bubbles with different colors for sent/received messages
 
 ## 🤝 Contributing
 
