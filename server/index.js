@@ -76,7 +76,6 @@ function startServer(port = process.env.PORT || 3000) {
         if (type === 'chat') {
           // Get sender's info
           const senderInfo = clients.get(clientId);
-          const msgId = randomUUID();
           
           // Broadcast to all clients EXCEPT the sender
           for (let [id, { ws: cWs, name: fromName, iconUrl }] of clients.entries()) {
@@ -86,7 +85,7 @@ function startServer(port = process.env.PORT || 3000) {
             if (cWs.readyState === WebSocket.OPEN) {
               cWs.send(JSON.stringify({
                 type: 'chat',
-                messageId: msgId,
+                messageId: messageId,
                 fromName: senderInfo.name,
                 iconUrl: senderInfo.iconUrl,
                 text

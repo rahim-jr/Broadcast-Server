@@ -39,6 +39,7 @@ socket.addEventListener('message', event => {
   }
   else if (data.type === 'edit') {
     // Handle message editing
+    console.log('Received edit:', data.messageId, data.text);
     editMessage(data.messageId, data.text);
   }
 });
@@ -81,8 +82,12 @@ function appendMessage(name, img, side, text, messageId) {
 }
 
 function editMessage(messageId, newText = null) {
+  console.log('editMessage called:', messageId, newText);
   const messageElement = document.querySelector(`[data-message-id="${messageId}"]`);
-  if (!messageElement) return;
+  if (!messageElement) {
+    console.log('Message element not found for ID:', messageId);
+    return;
+  }
   
   if (newText !== null) {
     // Update message text (for incoming edits)
