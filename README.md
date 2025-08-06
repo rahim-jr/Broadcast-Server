@@ -21,9 +21,9 @@ Visit the live application at: [SimpleChat](https://broadcast-server-l55g.onrend
 
 Watch the application in action:
 
-**📁 Video File:** [`video/video.mkv`](video/video.mkv)
+[![SimpleChat Demo](https://img.youtube.com/vi/vvPElrBQnW0/0.jpg)](https://youtu.be/vvPElrBQnW0)
 
-*Download or open the video file to see the application demo in action.*
+*Click the image above to watch the full demo video on YouTube*
 
 **Features demonstrated in the video:**
 - Real-time messaging between multiple users
