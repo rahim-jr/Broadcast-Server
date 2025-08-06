@@ -72,6 +72,9 @@ function startServer(port = process.env.PORT || 3000) {
       ws.on('message', raw => {
         const { type, text } = JSON.parse(raw);
         if (type === 'chat') {
+          // Get sender's info
+          const senderInfo = clients.get(clientId);
+          
           // Broadcast to all clients EXCEPT the sender
           for (let [id, { ws: cWs, name: fromName, iconUrl }] of clients.entries()) {
             // Skip if this is the sender's WebSocket
@@ -85,6 +88,16 @@ function startServer(port = process.env.PORT || 3000) {
                 text
               }));
             }
+          }
+          
+          // Send back to sender so they can see their own message
+          if (ws.readyState === WebSocket.OPEN) {
+            ws.send(JSON.stringify({
+              type: 'chat',
+              fromName: senderInfo.name,
+              iconUrl: senderInfo.iconUrl,
+              text
+            }));
           }
         }
       });

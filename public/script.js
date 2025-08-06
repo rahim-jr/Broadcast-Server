@@ -34,7 +34,10 @@ socket.addEventListener('message', event => {
     PERSON_ICON = data.iconUrl;
   }
   else if (data.type === 'chat') {
-    appendMessage(data.fromName, data.iconUrl, 'left', data.text);
+    // Determine if this is the user's own message
+    const isOwnMessage = data.fromName === PERSON_NAME;
+    const side = isOwnMessage ? 'right' : 'left';
+    appendMessage(data.fromName, data.iconUrl, side, data.text);
   }
 });
 
@@ -42,7 +45,7 @@ msgerForm.addEventListener("submit", event => {
   event.preventDefault();
   const text = msgerInput.value.trim();
   if (!text) return;
-  appendMessage(PERSON_NAME, PERSON_ICON, "right", text);
+  // Don't display own message immediately - wait for server broadcast
   socket.send(JSON.stringify({ type: 'chat', text }));
   msgerInput.value = "";
 });
