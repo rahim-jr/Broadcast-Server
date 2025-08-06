@@ -17,6 +17,20 @@ A modern, real-time chat application built with Node.js, WebSocket, and Express.
 
 Visit the live application at: [SimpleChat](https://broadcast-server-l55g.onrender.com)
 
+## 📹 Demo Video
+
+Watch the application in action:
+
+**📁 Video File:** [`video/video.mkv`](video/video.mkv)
+
+*Download or open the video file to see the application demo in action.*
+
+**Features demonstrated in the video:**
+- Real-time messaging between multiple users
+- Message editing functionality
+- User name assignment
+- Real-time updates across all connected clients
+
 ## 🚀 Features
 
 - **Real-time messaging** using WebSocket
